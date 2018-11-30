@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         百度文库（wenku）在线下载PDF格式文件
 // @namespace    http://ekozhan.com
-// @version      0.1.1
+// @version      0.1.3
 // @description  百度文库文档页面打印PDF，chrome浏览器最好能安装一下 adblock 插件，下载后的pdf文件可以在 https://pdf2docx.com/zh/ 上转换成docx
 // @author       eko.zhan, HelloCodeMing
 // @match        *://wenku.baidu.com/view/*
@@ -13,7 +13,23 @@
 (function() {
     'use strict';
     //等待3秒页面加载完毕后再单击阅读更多按钮
-    window.setTimeout(function(){prePrint()}, 3000);
+    window.setTimeout(function(){insert()}, 300);
+
+    //insert print btn
+    function insert(){
+        if ($('#btnPrintStyle').length==0){
+            $('head').append(['<style id="btnPrintStyle">',
+                '.ez-btn{border:1px solid #19A97B;border-radius: 3px;background: transparent;color:#19A97B;margin-left:10px;font-size: 14px;}',
+                '.ez-btn:hover{border: 1px solid #0F6649;color:#0F6649;}',
+                '#doc-header-test .doc-value{margin-right: 10px !important;padding-right: 10px;}',
+                '</style>'].join(' '));
+        }
+        /*$('#doc-tittle-0').append('<button class="ez-btn">打印</button>');*/
+        $('.qrHover').append('<button class="ez-btn">打印</button>');
+        $('.ez-btn').click(function(){
+            prePrint();
+        });
+    }
     //main function
     function prePrint(){
         $('.moreBtn').click();
