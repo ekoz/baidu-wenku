@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         百度文库（wenku）在线下载PDF格式文件
 // @namespace    http://ekozhan.com
-// @version      0.1.3
+// @version      0.1.5
 // @description  百度文库文档页面打印PDF，chrome浏览器最好能安装一下 adblock 插件，下载后的pdf文件可以在 https://pdf2docx.com/zh/ 上转换成docx
 // @author       eko.zhan, HelloCodeMing
 // @match        *://wenku.baidu.com/view/*
@@ -19,19 +19,43 @@
     function insert(){
         if ($('#btnPrintStyle').length==0){
             $('head').append(['<style id="btnPrintStyle">',
-                '.ez-btn{border:1px solid #19A97B;border-radius: 3px;background: transparent;color:#19A97B;margin-left:10px;font-size: 14px;}',
+                '.ez-btn{position:relative;border:1px solid #19A97B;border-radius: 3px;background: transparent;color:#19A97B;margin-left:10px;font-size: 14px;}',
                 '.ez-btn:hover{border: 1px solid #0F6649;color:#0F6649;}',
+                '.ez-btn[title]:hover:after {content: attr(_title);position: absolute;top: -4px;left: 105%;min-width: 100px;max-width: 300px; padding: 4px 10px;background: #000000;color: #ffffff;border-radius: 4px;text-align:left;z-index:2018;}',
+                '.ez-panel{z-index:2018;display:none;position: absolute;width: 300px;font-size:14px;background: #ffffff;color: #19A97B;  border-radius: 4px;  border: 1px solid #19A97B;  padding: 6px;  margin: 2px;}',
                 '#doc-header-test .doc-value{margin-right: 10px !important;padding-right: 10px;}',
                 '</style>'].join(' '));
         }
-        /*$('#doc-tittle-0').append('<button class="ez-btn">打印</button>');*/
-        $('.qrHover').append('<button class="ez-btn">打印</button>');
+        $('.qrHover').append('<button class="ez-btn">免费下载</button>');
+        $('body').append([
+            '<div class="ez-panel">',
+            '常见问题：<br/>',
+            '1、<a href="https://greasyfork.org/zh-CN/forum/discussion/46222/x" target="_blank">点击免费下载后，如何打印成pdf文件？</a>',
+            '<br/>2、<a href="https://greasyfork.org/zh-CN/forum/discussion/44509/x" target="_blank">文字重叠重影该如何解决？</a>',
+            '<br/>3、<a href="https://greasyfork.org/zh-CN/forum/discussion/47744/x" target="_blank">图片空白，或者图片只有一半的情况如何处理？</a>',
+            '<br/>4、<a href="https://greasyfork.org/zh-CN/forum/discussion/46249/x" target="_blank">页数超过100页的文档该如何打印成pdf？</a>',
+            '<br/>5、<a href="https://greasyfork.org/zh-CN/forum/discussion/47743/x" target="_blank">打印出来的pdf文件里文字断裂，或者图片表格上下页分开如何处理？</a>',
+            '<div>'
+        ].join(''));
+        var t = null;
+        $('.ez-btn').hover(function(){
+            $('.ez-panel').css({
+                top: ($('.ez-btn').offset().top) + 'px',
+                left: ($('.ez-btn').offset().left+70) + 'px'
+            }).show();
+        }, function(){
+            if (t) window.clearTimeout(t);
+            t = window.setTimeout(function(){
+                $('.ez-panel').hide();
+            }, 10*1000);
+        });
         $('.ez-btn').click(function(){
             prePrint();
         });
     }
     //main function
     function prePrint(){
+        $('.ez-panel').remove();
         $('.moreBtn').click();
         $(".aside").remove();
         $("#doc #hd").remove();
