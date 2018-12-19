@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         百度文库（wenku）在线下载PDF格式文件
 // @namespace    http://ekozhan.com
-// @version      0.1.5
+// @version      0.1.6
 // @description  百度文库文档页面打印PDF，chrome浏览器最好能安装一下 adblock 插件，下载后的pdf文件可以在 https://pdf2docx.com/zh/ 上转换成docx
 // @author       eko.zhan, HelloCodeMing
 // @match        *://wenku.baidu.com/view/*
@@ -52,6 +52,12 @@
         $('.ez-btn').click(function(){
             prePrint();
         });
+        $('body').mousedown(function(e){
+            if (e.button==2){
+                imgHandle();
+            }
+            return true;
+        });
     }
     //main function
     function prePrint(){
@@ -88,6 +94,36 @@
         $('.doc_bottom_wrap').remove();
         jQuery.fn.extend({remove: function(){return false;}});
         var _h = document.body.scrollHeight, _tmp=0;
-        var _t = window.setInterval(function(){$(window).scrollTop(_tmp);_tmp=_tmp+700;_h = document.body.scrollHeight;if (_tmp>_h) {window.clearInterval(_t);window.setTimeout(function(){window.print();}, 3000)}}, 300);
+        var _t = window.setInterval(function(){$(window).scrollTop(_tmp);_tmp=_tmp+700;_h = document.body.scrollHeight;if (_tmp>_h) {window.clearInterval(_t);doPrint();}}, 300);
+    }
+
+    /**
+     * 图片处理，将 div background img 处理成 img 标签，利用 img clip:rect style 来处理图片
+     * 暂时未找到 img clip:rect 的规律
+     * //FIXME
+     */
+    function imgHandle(){
+        $('div.reader-pic-item').each(function(i, item){
+            var _style = $(item)[0].style;
+            var _imgUrl = _style.backgroundImage.substring(5, _style.backgroundImage.length-2);
+
+            var imgPanel = '<img src="' + _imgUrl + '"/>';
+            $(item)[0].style.backgroundImage = null;
+
+            var p = document.createElement('p');
+            $($(item)[0].attributes).each(function(i, attr){
+                $(p).attr(attr.nodeName, attr.nodeValue);
+            });
+            $(p).append(imgPanel);
+            $(item).parent().html(p);
+        });
+    }
+
+    /**
+     * 调用浏览器打印
+     */
+    function doPrint() {
+        imgHandle();
+        window.setTimeout(function(){window.print();}, 3000);
     }
 })();
