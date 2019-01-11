@@ -1,3 +1,6 @@
+#### 2018.12.19 v.0.1.7
+* 感谢 [wpc001](https://greasyfork.org/zh-CN/forum/discussion/48999/x) 的反馈，移除宽屏上多余的dom元素
+
 ## 百度文库（wenku）在线下载为PDF格式文件
     百度文库文档页面打印PDF，chrome浏览器最好能安装一下 adblock 插件，下载后的pdf文件可以在 https://pdf2docx.com/zh/ 上转换成docx
     

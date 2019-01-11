@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         百度文库（wenku）在线下载PDF格式文件
 // @namespace    http://ekozhan.com
-// @version      0.1.6
+// @version      0.1.7
 // @description  百度文库文档页面打印PDF，chrome浏览器最好能安装一下 adblock 插件，下载后的pdf文件可以在 https://pdf2docx.com/zh/ 上转换成docx
 // @author       eko.zhan, HelloCodeMing
 // @match        *://wenku.baidu.com/view/*
@@ -88,6 +88,7 @@
         $('.doc-tag-professional').remove();
         $('.doc-tag-pay-discount').remove();
         $('.doc-tag-ticket').remove();
+        $('#activity-tg').remove();
         $("body").attr("margin", "auto");
         $(".bd").attr("style", "height:1262.879px");
         $('.reader-page').css({border: 0});
